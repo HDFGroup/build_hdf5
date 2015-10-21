@@ -23,21 +23,10 @@ NOTE (1): If the system already has HDF5 installed then you can use it instead, 
 where prefix is set for where the hdf5 library will get installed. There should 
 be no need to modify in the script.
 
-(3) Building cgns from source:
-
-   (a) cd into the cgns/src directory
-   (b) modify and run: <pathto>/build_cgns
-   (c) make
-   (d) To make the tests: 
-			  cd ptests
-			  make
-
-(4) IMPORTANT PARAMETERS FOR GOOD PERFORMANCE
+(3) IMPORTANT PARAMETERS FOR GOOD PERFORMANCE
 
     (i) The environment variable BGLOCKLESSMPIO_F_TYPE=0x47504653 should be set.
 
         * Set using qsub --env BGLOCKLESSMPIO_F_TYPE=0x47504653
-
-    (ii) does CGNS_FILETYPE need to be set ????
 
 
