@@ -7,12 +7,12 @@
 #
 # Build script to build hdf5 on Blue Waters
 source /opt/modules/default/init/bash
-module swap cce cce/8.3.9
-module swap cray-mpich cray-mpich/7.2.0
+module swap cce cce/8.3.14
+module swap cray-mpich cray-mpich/7.2.4
 module unload cray-libsci
 module load cmake
 
-INSTALL=$HOME/packages/phdf5_trunk_cray
+INSTALL=$HOME/packages/phdf5_1_8_cray
 
 cmake -DCMAKE_INSTALL_PREFIX:STRING=$INSTALL \
       -DBUILD_SHARED_LIBS:BOOL=ON \
