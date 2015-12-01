@@ -14,7 +14,7 @@ LIBTOOL_VERS=libtool-2.4.6
 INSTALL_DIR=$(pwd)
 
 wget http://ftp.gnu.org/gnu/autoconf/$AUTOCONF_VERS.tar.gz
-tar xvzf $AUTOCONF_VERS.tar.gz
+tar xzf $AUTOCONF_VERS.tar.gz
 cd $AUTOCONF_VERS
 ./configure --prefix=$INSTALL_DIR/util CC=$CC
 make
@@ -22,7 +22,7 @@ make install
 cd ..
 
 wget http://ftp.gnu.org/gnu/automake/$AUTOMAKE_VERS.tar.gz
-tar xvzf $AUTOMAKE_VERS.tar.gz
+tar xzf $AUTOMAKE_VERS.tar.gz
 cd $AUTOMAKE_VERS
 ./configure --prefix=$INSTALL_DIR/util CC=$CC
 make
@@ -30,7 +30,7 @@ make install
 cd ..
 
 wget http://gnu.mirror.vexxhost.com/libtool/$LIBTOOL_VERS.tar.gz
-tar xvzf $LIBTOOL_VERS.tar.gz
+tar xzf $LIBTOOL_VERS.tar.gz
 cd $LIBTOOL_VERS
 ./configure --prefix=$INSTALL_DIR/util CC=$CC
 make
