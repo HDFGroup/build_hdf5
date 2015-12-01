@@ -8,12 +8,12 @@
 # Build script to build hdf5 on Blue Waters
 
 source /opt/modules/default/init/bash
-module swap cce cce/8.3.9
+module swap cce cce/8.3.14
 module unload cray-libsci atp
 module load xpmem dmapp ugni udreg
-module swap cray-mpich/7.0.3 cray-mpich/7.1.3
+module swap cray-mpich cray-mpich/7.2.4
 
-DIR="$HOME/packages/phdf5_trunk_cray"
+DIR="$HOME/packages/phdf5_1_8_cray"
 
 export XTPE_LINK_TYPE=dynamic
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${CRAY_MPICH2_DIR}/lib"
@@ -32,7 +32,7 @@ export FCFLAGS="-em -dynamic"
 export CXXFLAGS="-DpgiFortran"
 export RUNPARALLEL="aprun -n 6"
 
-$HOME/packages/trunk/configure \
+$HOME/packages/hdf5_1_8/configure \
 --prefix=${DIR} --disable-silent-rules --enable-fortran --enable-fortran2003 \
 --enable-static --with-pic --disable-sharedlib-rpath --with-zlib=/usr/lib64 --enable-parallel \
 --enable-shared --enable-production 
