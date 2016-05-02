@@ -29,7 +29,7 @@ make
 make install
 cd ..
 
-wget http://gnu.mirror.vexxhost.com/libtool/$LIBTOOL_VERS.tar.gz
+wget http://www.dvlnx.com/software/gnu/libtool/$LIBTOOL_VERS.tar.gz
 tar xzf $LIBTOOL_VERS.tar.gz
 cd $LIBTOOL_VERS
 ./configure --prefix=$INSTALL_DIR/util CC=$CC
