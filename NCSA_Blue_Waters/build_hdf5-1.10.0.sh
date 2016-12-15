@@ -65,7 +65,7 @@ cd build
 
 ../configure --prefix=${HDF5_INSTALL_DIR} --disable-silent-rules --enable-fortran --enable-fortran2003 --enable-static --with-pic --disable-sharedlib-rpath --with-zlib=/usr/lib64 --enable-parallel --enable-shared --enable-build-mode=production
 
-sed -i -e 's|wl=""|wl="-Wl,"|g' -e 's|pic_flag=" -.PIC"|pic_flag=" -hPIC"|g' libtool
+sed -i -e 's|wl=""|wl="-Wl,"|g' -e 's|pic_flag=" -.PIC"|pic_flag=" -hPIC"|g' `which libtool`
 
 make -j 8
 make install
