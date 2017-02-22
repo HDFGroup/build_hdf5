@@ -5,7 +5,7 @@
 # Set these environment vars appropriately, the rest should just work
 
 export SOURCES_DIR=/u/sciteam/willmore/local/hdf5-1.9.236
-export HDF5_INSTALL_DIR=/sw/bw/thg/phdf5-1.9.236_ftw 
+export HDF5_INSTALL_DIR=/sw/bw/thg/phdf5/1.9.236
 
 # Should not need to edit below here.  
 
