@@ -9,7 +9,7 @@ export HDF5_INSTALL_DIR=/sw/bw/thg/phdf5-1.9.236_ftw
 
 # Should not need to edit below here.  
 
-module load autoconf/2.6.9
+module load autoconf/2.69
 module unload darshan
 
 # This macro breaks configure, so I just comment it out with this in-place edit:
@@ -34,5 +34,5 @@ make -j8 install
  
 #Load craypkg-gen to make the package and module:
 module load craypkg-gen
-craypkg-gen -p /sw/bw/thg/phdf5/1.9.236_ftw/
-craypkg-gen -m /sw/bw/thg/phdf5/1.9.236_ftw/ 
+craypkg-gen -p $HDF5_INSTALL_DIR
+craypkg-gen -m $HDF5_INSTALL_DIR
