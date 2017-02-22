@@ -20,6 +20,8 @@ fi
 module load autoconf/2.69
 module unload darshan
 
+cd $SOURCES_DIR
+
 # This macro breaks configure, so I just comment it out with this in-place edit:
 sed -i -e "s/AM_SILENT_RULES/## AM_SILENT_RULES/" $SOURCES_DIR/configure.ac
 # Set some environment stuff that the Cray compiler likes:
