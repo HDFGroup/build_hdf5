@@ -1,13 +1,21 @@
 /bin/bash
 
 # Source this script to build and install a feature branch on BW.
+# Set these environment vars appropriately or before sourcing script; the rest should just work
 
-# Set these environment vars appropriately, the rest should just work
+if [ $SOURCES_DIR"x" == "x" ]; then 
+    export SOURCES_DIR=/u/sciteam/willmore/local/hdf5-1.9.236
+fi
 
-export SOURCES_DIR=/u/sciteam/willmore/local/hdf5-1.9.236
-export HDF5_INSTALL_DIR=/sw/bw/thg/phdf5/1.9.236
+if [ $HDF5_INSTALL_DIR"x" == "x" ]; then 
+    export HDF5_INSTALL_DIR=/sw/bw/thg/phdf5/1.9.236
+fi
+
+##############################################################################
 
 # Should not need to edit below here.  
+
+##############################################################################
 
 module load autoconf/2.69
 module unload darshan
