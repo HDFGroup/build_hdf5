@@ -1,0 +1,153 @@
+#!/bin/sh
+#
+#    __________  _____  __       _  __________ __  ____ 
+#   / ____/ __ \/   \ \/ /      | |/ / ____/ // / / __ \
+#  / /   / /_/ / /| |\  /       |   / /   / // /_/ / / /
+# / /___/ _, _/ ___ |/ /       /   / /___/__  __/ /_/ / 
+# \____/_/ |_/_/  |_/_/       /_/|_\____/  /_/  \____/  
+#                                                      
+#
+#
+# Build script to build hdf5 on CRAY XC40
+#
+# Usage: build_hdf5
+
+USAGE()
+{
+cat <<EOF
+
+Make HDF5 library for CRAY XC40.
+Buildhdf5 builds the HDF5 library by running configure, make and make install.
+It skips the configure part if one has been done already.  In effect, one
+can continue from a previous build.
+
+Command Syntax
+==============
+$0 [-config] [-szlib] [-help] [-n] [-srcdir dir] config-arguments ...
+
+   -config:	run configure only. [default to do the build too]
+   -intel:      using intel compiler [default]
+   -gnu:        using gnu compiler
+   -cray:       using cray compiler
+   -gen_config  generate configure file, only needed if
+                downloaded HDF5 from repository.
+   -loadmodules list of modules to load
+   -help:	show this help page
+   -srcdir:	use dir as the source directory
+             	   [Note: this is different from --srcdir
+             	    which will be passed to configure]
+
+   all other arguments are passed to configure
+
+
+Configure in place or by srcdir
+===============================
+By default, the command looks for the configure command in
+'.' and then '../hdf5'.  When it finds it, it uses it to do
+the configure part.  In effect, if ./configure is found, it
+does the build in place.  If it finds ../hdf5/configure, it
+does the --srcdir (that is separated source) build.  Therefore,
+if you have the following structure setup, you can run multiple
+hosts building simultantously using a common source code.
+     hdf5_v1.7/hdf5       # holds the source
+	  .../sunbox      # for SunOS
+	  .../linux       # for Linux
+	  .../linuxpp     # for Linux parallel
+
+EOF
+}
+CONFIG_ONLY=no
+CRAY_BUILD_AUTOTOOS=""
+SRCDIR=""
+INSTALLDIR=""
+CONFIGURE="./configure"
+COMPILER_ID=""
+# Main
+# Parse command options
+while [ $# -gt 0 ]; do
+    case "$1" in
+	--help)
+	    USAGE
+	    exit 0
+	    ;;
+	--help)
+	    USAGE
+	    exit 0
+	    ;;
+	-n)
+	    NOEXEC='noexec'
+	    ;;
+        -build_autotools)
+	    shift
+	    BUILD_AUTOTOOLS_DIR="$1"
+	    ;;
+	-srcdir)
+	    shift
+	    SRCDIR="$1"
+	    ;;
+        -compiler)
+	    shift
+	    COMPILER_ID="$1"
+	    ;;
+
+	*)	# pass it as a configure option
+	    CONFIG_OP="$CONFIG_OP $1"
+	    ;;
+    esac
+    shift
+done
+
+if [ -f $BUILD_AUTOTOOLS_DIR/preinstall_hdf5.sh ]; then
+   $BUILD_AUTOTOOLS_DIR/preinstall_hdf5.sh
+   if [ $? -ne 0 ]; then
+        echo "preinstall_hdf5.sh FAILED"
+	exit 1
+   fi
+   export PATH=$BUILD_AUTOTOOLS_DIR/util/bin:$PATH
+else
+   echo "ERROR: can't find preinstall_hdf5.sh in $BUILD_AUTOTOOLS_DIR"
+   exit 1
+fi
+
+if [ -d $SRCDIR ]; then
+   CONFIGURE="$SRCDIR/configure"
+else
+   echo "ERROR: can't find HDF5 source in $SRCDIR"
+   exit 1
+fi
+
+if[ "$COMPILER_ID" == "intel" || "$COMPILER_ID" == ""]
+  export CC="cc"
+  export FC="ftn"
+  export CXX="CC"
+  export CFLAGS="-fPIC -Ofast"
+  export FCFLAGS="-fPIC -Ofast"
+  export LDFLAGS="-dynamic"
+  export RTLD_DEEPBIND=0
+fi
+
+#export RUNPARALLEL="mpiexec -n 6"
+#export RUNSERIAL="mpiexec -n 1"
+
+cd $SOURCES_DIR
+
+CONFIGURE="$CONFIGURE $CONFIG_OP"
+
+CONFIGURE="./configure $CONFIG_OP"
+echo "$CONFIGURE"
+$CONFIGURE
+if [ $? -ne 0 ]; then
+    echo "error in Configure.  Aborted."
+    exit 1
+fi
+make -j4
+if [ $? -ne 0 ]; then
+    echo "error in make.  Aborted."
+    exit 1
+fi
+make install
+if [ $? -ne 0 ]; then
+    echo "error in make install.  Aborted."
+    exit 1
+fi
+
