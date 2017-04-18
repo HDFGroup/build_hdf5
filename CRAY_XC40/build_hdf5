@@ -23,12 +23,9 @@ can continue from a previous build.
 
 Command Syntax
 ==============
-$0 [-config] [-szlib] [-help] [-n] [-srcdir dir] config-arguments ...
+$0 [-compiler <OPT>] [-szlib] [-help] [-n] [-srcdir dir] config-arguments ...
 
-   -config:	run configure only. [default to do the build too]
-   -intel:      using intel compiler [default]
-   -gnu:        using gnu compiler
-   -cray:       using cray compiler
+   -compiler    options are: intel [D], cray, gnu
    -gen_config  generate configure file, only needed if
                 downloaded HDF5 from repository.
    -loadmodules list of modules to load
@@ -66,16 +63,13 @@ COMPILER_ID=""
 # Parse command options
 while [ $# -gt 0 ]; do
     case "$1" in
-	--help)
+	-help)
 	    USAGE
 	    exit 0
 	    ;;
 	--help)
 	    USAGE
 	    exit 0
-	    ;;
-	-n)
-	    NOEXEC='noexec'
 	    ;;
         -build_autotools)
 	    shift
@@ -116,24 +110,26 @@ else
    exit 1
 fi
 
+# if 'configure' does not exists then generate it
+if ! [ -f $CONFIGURE ]; then
+  $SRCDIR/autogen.sh
+fi
+
+export CC="cc"
+export FC="ftn"
+export CXX="CC"
+export CFLAGS="-fPIC"
+export FCFLAGS="-fPIC"
+export LDFLAGS="-dynamic"
+
 if[ "$COMPILER_ID" == "intel" || "$COMPILER_ID" == ""]
-  export CC="cc"
-  export FC="ftn"
-  export CXX="CC"
-  export CFLAGS="-fPIC -Ofast"
-  export FCFLAGS="-fPIC -Ofast"
-  export LDFLAGS="-dynamic"
+  export CFLAGS="-Ofast"
+  export FCFLAGS="-Ofast"
   export RTLD_DEEPBIND=0
 fi
 
-#export RUNPARALLEL="mpiexec -n 6"
-#export RUNSERIAL="mpiexec -n 1"
-
-cd $SOURCES_DIR
-
 CONFIGURE="$CONFIGURE $CONFIG_OP"
 
-CONFIGURE="./configure $CONFIG_OP"
 echo "$CONFIGURE"
 $CONFIGURE
 if [ $? -ne 0 ]; then
