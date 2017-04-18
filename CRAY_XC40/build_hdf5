@@ -23,7 +23,7 @@ can continue from a previous build.
 
 Command Syntax
 ==============
-$0 [-compiler <OPT>] [-help]  [-srcdir dir] config-arguments ...
+$0 [-compiler <OPT>] [-help] [-srcdir dir] config-arguments ...
 
    -compiler    options are: intel [D], cray, gnu
    -help:	show this help page
@@ -34,7 +34,7 @@ all other arguments are passed to configure
 EOF
 }
 CONFIG_ONLY=no
-CRAY_BUILD_AUTOTOOS=""
+BUILD_AUTOTOOLS_DIR=""
 SRCDIR=""
 INSTALLDIR=""
 CONFIGURE="./configure"
@@ -71,16 +71,18 @@ while [ $# -gt 0 ]; do
     shift
 done
 
-if [ -f $BUILD_AUTOTOOLS_DIR/preinstall_hdf5.sh ]; then
-   $BUILD_AUTOTOOLS_DIR/preinstall_hdf5.sh
-   if [ $? -ne 0 ]; then
-        echo "preinstall_hdf5.sh FAILED"
+if ! [ $BUILD_AUTOTOOLS_DIR == ""];then
+    if [ -f $BUILD_AUTOTOOLS_DIR/preinstall_hdf5.sh ]; then
+	$BUILD_AUTOTOOLS_DIR/preinstall_hdf5.sh
+	if [ $? -ne 0 ]; then
+	    echo "preinstall_hdf5.sh FAILED"
+	    exit 1
+	fi
+	export PATH=$BUILD_AUTOTOOLS_DIR/util/bin:$PATH
+    else
+	echo "ERROR: can't find preinstall_hdf5.sh in $BUILD_AUTOTOOLS_DIR"
 	exit 1
-   fi
-   export PATH=$BUILD_AUTOTOOLS_DIR/util/bin:$PATH
-else
-   echo "ERROR: can't find preinstall_hdf5.sh in $BUILD_AUTOTOOLS_DIR"
-   exit 1
+    fi
 fi
 
 if [ -d $SRCDIR ]; then
