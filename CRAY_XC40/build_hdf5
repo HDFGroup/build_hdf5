@@ -37,7 +37,7 @@ $0 [-compiler <OPT>] [-help] [-srcdir dir] config-arguments ...
 all other arguments are passed to configure
 
 EXAMPLE:
-  ../build_hdf5/CRAY_XC40/build_hdf5 --prefix=$PWD/build --enable-fortran --enable-shared
+  ../build_hdf5/CRAY_XC40/build_hdf5 --prefix=$PWD/build --enable-fortran --enable-shared --enable-parallel
 
 EOF
 }
@@ -115,7 +115,6 @@ export LDFLAGS="-dynamic"
 if [[ ("$COMPILER_ID" == "intel") || ("$COMPILER_ID" == "")]]; then
   export CFLAGS="-Ofast"
   export FCFLAGS="-Ofast"
-  export RTLD_DEEPBIND=0
 fi
 
 CONFIGURE="$CONFIGURE $CONFIG_OP"
