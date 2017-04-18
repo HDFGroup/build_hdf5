@@ -21,23 +21,25 @@ USAGE()
 {
 cat <<EOF
 
-Make HDF5 library for CRAY XC40.
-Buildhdf5 builds the HDF5 library by running configure, make and make install.
+Makes HDF5 library for CRAY XC40.
+==================================
+
+build_hdf5 builds the HDF5 library by running configure, make and make install.
 It skips the configure part if one has been done already.  In effect, one
 can continue from a previous build.
 
 Command Syntax
 ==============
-$0 [-compiler <OPT>] [-help] [-srcdir dir] config-arguments ...
+$0 [-compiler <OPT>] [-help] [-srcdir dir] HDF5 config-arguments ...
 
    -compiler    options are: intel [D], cray, gnu
    -help:	show this help page
    -srcdir:	directory with the HDF5 source resides
 
-all other arguments are passed to configure
+all other arguments are passed to HDF5 configure command
 
 EXAMPLE:
-  ../build_hdf5/CRAY_XC40/build_hdf5 -srcdir $PWD../ --prefix=$PWD/build --enable-fortran --enable-shared --enable-parallel
+  ../build_hdf5/CRAY_XC40/build_hdf5 -srcdir \$PWD../ --prefix=\$PWD/build --enable-fortran --enable-shared --enable-parallel
 
 EOF
 }
