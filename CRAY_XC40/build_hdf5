@@ -36,6 +36,9 @@ $0 [-compiler <OPT>] [-help] [-srcdir dir] config-arguments ...
 
 all other arguments are passed to configure
 
+EXAMPLE:
+  ../build_hdf5/CRAY_XC40/build_hdf5 --prefix=$PWD/build --enable-fortran --enable-shared
+
 EOF
 }
 CONFIG_ONLY=no
@@ -85,7 +88,7 @@ if ! [ $BUILD_AUTOTOOLS_DIR == ""];then
 	fi
 	export PATH=$BUILD_AUTOTOOLS_DIR/util/bin:$PATH
     else
-	echo "ERROR: can't find preinstall_hdf5.sh in $BUILD_AUTOTOOLS_DIR"
+	printf "${RED} ERROR: can't find preinstall_hdf5.sh in $BUILD_AUTOTOOLS_DIR.  Aborted.${NC}\n"
 	exit 1
     fi
 fi
@@ -93,7 +96,7 @@ fi
 if [ -d $SRCDIR ]; then
    CONFIGURE="$SRCDIR/configure"
 else
-   echo "ERROR: can't find HDF5 source in $SRCDIR"
+   printf "${RED}ERROR: can't find HDF5 source in $SRCDIR.  Aborted. ${NC}\n"
    exit 1
 fi
 
@@ -120,17 +123,17 @@ CONFIGURE="$CONFIGURE $CONFIG_OP"
 printf "${YELLOW} $CONFIGURE ${NC}\n"
 $CONFIGURE
 if [ $? -ne 0 ]; then
-    echo "error in Configure.  Aborted."
+    printf "${RED}error in Configure.  Aborted.${NC}\n"
     exit 1
 fi
 make -j4
 if [ $? -ne 0 ]; then
-    echo "error in make.  Aborted."
+    printf "{RED}error in make.  Aborted.${NC}\n"
     exit 1
 fi
 make install
 if [ $? -ne 0 ]; then
-    echo "error in make install.  Aborted."
+    printf "{RED}error in make install.  Aborted.${NC}\n"
     exit 1
 fi
 
