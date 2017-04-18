@@ -23,33 +23,13 @@ can continue from a previous build.
 
 Command Syntax
 ==============
-$0 [-compiler <OPT>] [-szlib] [-help] [-n] [-srcdir dir] config-arguments ...
+$0 [-compiler <OPT>] [-help]  [-srcdir dir] config-arguments ...
 
    -compiler    options are: intel [D], cray, gnu
-   -gen_config  generate configure file, only needed if
-                downloaded HDF5 from repository.
-   -loadmodules list of modules to load
    -help:	show this help page
-   -srcdir:	use dir as the source directory
-             	   [Note: this is different from --srcdir
-             	    which will be passed to configure]
+   -srcdir:	directory with the HDF5 source resides
 
-   all other arguments are passed to configure
-
-
-Configure in place or by srcdir
-===============================
-By default, the command looks for the configure command in
-'.' and then '../hdf5'.  When it finds it, it uses it to do
-the configure part.  In effect, if ./configure is found, it
-does the build in place.  If it finds ../hdf5/configure, it
-does the --srcdir (that is separated source) build.  Therefore,
-if you have the following structure setup, you can run multiple
-hosts building simultantously using a common source code.
-     hdf5_v1.7/hdf5       # holds the source
-	  .../sunbox      # for SunOS
-	  .../linux       # for Linux
-	  .../linuxpp     # for Linux parallel
+all other arguments are passed to configure
 
 EOF
 }
