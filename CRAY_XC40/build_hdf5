@@ -127,7 +127,7 @@ if [ $? -ne 0 ]; then
     printf "${RED}error in Configure.  Aborted.${NC}\n"
     exit 1
 fi
-make -j4
+make -j8
 if [ $? -ne 0 ]; then
     printf "{RED}error in make.  Aborted.${NC}\n"
     exit 1
