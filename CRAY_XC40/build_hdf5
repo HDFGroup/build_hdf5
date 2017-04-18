@@ -35,7 +35,7 @@ EOF
 }
 CONFIG_ONLY=no
 BUILD_AUTOTOOLS_DIR=""
-SRCDIR=""
+SRCDIR="."
 INSTALLDIR=""
 CONFIGURE="./configure"
 COMPILER_ID=""
@@ -104,7 +104,7 @@ export CFLAGS="-fPIC"
 export FCFLAGS="-fPIC"
 export LDFLAGS="-dynamic"
 
-if[ "$COMPILER_ID" == "intel" || "$COMPILER_ID" == ""]
+if [[ ("$COMPILER_ID" == "intel") || ("$COMPILER_ID" == "")]]; then
   export CFLAGS="-Ofast"
   export FCFLAGS="-Ofast"
   export RTLD_DEEPBIND=0
