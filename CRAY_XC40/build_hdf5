@@ -12,6 +12,11 @@
 #
 # Usage: build_hdf5
 
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
 USAGE()
 {
 cat <<EOF
@@ -112,7 +117,7 @@ fi
 
 CONFIGURE="$CONFIGURE $CONFIG_OP"
 
-echo "$CONFIGURE"
+printf "${YELLOW} $CONFIGURE ${NC}\n"
 $CONFIGURE
 if [ $? -ne 0 ]; then
     echo "error in Configure.  Aborted."
