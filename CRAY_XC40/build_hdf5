@@ -37,7 +37,7 @@ $0 [-compiler <OPT>] [-help] [-srcdir dir] config-arguments ...
 all other arguments are passed to configure
 
 EXAMPLE:
-  ../build_hdf5/CRAY_XC40/build_hdf5 --prefix=$PWD/build --enable-fortran --enable-shared --enable-parallel
+  ../build_hdf5/CRAY_XC40/build_hdf5 -srcdir $PWD../ --prefix=$PWD/build --enable-fortran --enable-shared --enable-parallel
 
 EOF
 }
