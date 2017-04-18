@@ -8,6 +8,10 @@
 # Build script to build hdf5 on Blue Waters
 
 
+# Q's: which 'automake' is used? Does it matter? Not part of pre-install stuff
+
+# PRE: Download and unpack pristine sources to $SOURCES_DIR
+
 ###################### Set values for these three environment variables:
 
 # where is the build instructions repo? 
@@ -20,21 +24,25 @@ export HDF5_INSTALL_DIR=$HOME/local/phdf5-1.10.0-install
 
 ###################### Should not need to make changes below here. 
 
+# build directory where package will be assembled
+export BUILD_DIR=$SOURCES_DIR/build
+mkdir -p $BUILD_DIR
+cd $BUILD_DIR
+# Need a newer version of autotools, so run pre-install script to install here
+. $BW_BUILD_INSTRUCTIONS_DIR/preinstall_hdf5.sh
+# add libtool to path
+export PATH=`pwd`/util/bin:$PATH
+cd $SOURCES_DIR 
 
-# Need a newer version of autotools, so run pre-install script:
-cd $BW_BUILD_INSTRUCTIONS_DIR
-. preinstall_hdf5.sh
-export PATH=$BW_BUILD_INSTRUCTIONS_DIR/util/bin:$PATH
-
-
-# comment out the following because it's not recognized and hangs configure
+# the following line will comment out AM_SILENT_RULES in the resulting 
+# configure script, because it's not recognized and hangs autogen
 sed -i -e "s/AM_SILENT_RULES/## AM_SILENT_RULES/" $SOURCES_DIR/configure.ac
 
 
 # Get the modules in order so we have the right environment vars set:
 source /opt/modules/default/init/bash
 module swap cce cce/8.3.14
-module unload cray-libsci atp
+module unload cray-libsci atp darshan
 module load xpmem dmapp ugni udreg
 module swap cray-mpich cray-mpich/7.2.4
 
@@ -54,18 +62,30 @@ export CFLAGS="-DCRAYCC -dynamic"
 export LDFLAGS="-Wl,--no-as-needed,-lm,-lrt,--as-needed"
 export FCFLAGS="-em -dynamic"
 export CXXFLAGS="-DpgiFortran"
+
+# This messes up the build, which needs to run a script to generate H5lib_settings.c
+# Because build runs on the head node.
+# export RUNSERIAL="aprun -q -n 1"
 export RUNPARALLEL="aprun -n 6"
 
 
 # Okay, go do it
-cd $SOURCES_DIR
 ./autogen.sh
-mkdir build
-cd build
+cd $BUILD_DIR
 
-../configure --prefix=${HDF5_INSTALL_DIR} --disable-silent-rules --enable-fortran --enable-fortran2003 --enable-static --with-pic --disable-sharedlib-rpath --with-zlib=/usr/lib64 --enable-parallel --enable-shared --enable-build-mode=production
+../configure --prefix=${HDF5_INSTALL_DIR} --enable-parallel --enable-build-mode=production \
+             --enable-fortran --enable-static --enable-shared --with-pic \
+             --disable-sharedlib-rpath --with-zlib=/usr/lib64 --disable-silent-rules 
 
+#sed -i -e 's|wl=""|wl="-Wl,"|g' -e 's|pic_flag=" -.PIC"|pic_flag=" -hPIC"|g' `which libtool`
 sed -i -e 's|wl=""|wl="-Wl,"|g' -e 's|pic_flag=" -.PIC"|pic_flag=" -hPIC"|g' libtool
 
 make -j 8
 make install
+export LD_LIBRARY_PATH=$SRC/build-hdf5/src/.libs:$LD_LIBRARY_PATH
+
+echo "Done installing to ${HDF5_INSTALL_DIR}. Do remember to run the environment script when building."
+
+
+
+
