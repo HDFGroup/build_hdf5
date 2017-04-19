@@ -10,7 +10,6 @@
 #
 # Build script to build hdf5 on CRAY XC40
 #
-# Usage: build_hdf5
 
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -32,11 +31,14 @@ Command Syntax
 ==============
 $0 [-compiler <OPT>] [-help] [-srcdir dir] HDF5 config-arguments ...
 
-   -compiler    options are: intel [D], cray, gnu
-   -help:	show this help page
-   -srcdir:	directory with the HDF5 source resides
+   -compiler         options are: intel [D], cray, gnu
+   -help:	     show this help page
+   -srcdir:	     the directory where the HDF5 source resides
+   -build_autotools: build HDF5 compliant autotools. Useful if the
+                     installed autotool do not meet HDF5 requirements.
+                     Only needed for generating "configure".
 
-all other arguments are passed to HDF5 configure command
+all other arguments are passed to HDF5 configure command.
 
 EXAMPLE:
   ../build_hdf5/CRAY_XC40/build_hdf5 -srcdir \$PWD../ --prefix=\$PWD/build --enable-fortran --enable-shared --enable-parallel
@@ -81,6 +83,7 @@ while [ $# -gt 0 ]; do
     shift
 done
 
+# Install autotools packages if needed.
 if ! [ $BUILD_AUTOTOOLS_DIR == ""];then
     if [ -f $BUILD_AUTOTOOLS_DIR/preinstall_hdf5.sh ]; then
 	$BUILD_AUTOTOOLS_DIR/preinstall_hdf5.sh
@@ -94,7 +97,7 @@ if ! [ $BUILD_AUTOTOOLS_DIR == ""];then
 	exit 1
     fi
 fi
-
+# HDF5 source location
 if [ -d $SRCDIR ]; then
    CONFIGURE="$SRCDIR/configure"
 else
