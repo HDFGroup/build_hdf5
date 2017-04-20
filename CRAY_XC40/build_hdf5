@@ -41,7 +41,7 @@ $0 [-compiler <OPT>] [-help] [-srcdir dir] HDF5 config-arguments ...
 all other arguments are passed to HDF5 configure command.
 
 EXAMPLE:
-  ../build_hdf5/CRAY_XC40/build_hdf5 -srcdir \$PWD../ --prefix=\$PWD/build --enable-fortran --enable-shared --enable-parallel
+  ../build_hdf5/CRAY_XC40/build_hdf5 -srcdir \$PWD../ --prefix=\$PWD/build --enable-fortran --enable-shared --enable-parallel --enable-build-mode=production
 
 EOF
 }
