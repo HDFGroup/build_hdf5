@@ -31,7 +31,7 @@ Command Syntax
 ==============
 $0 [-compiler <OPT>] [-help] [-srcdir dir] HDF5 config-arguments ...
 
-   -compiler         options are: intel [D], cray, gnu
+   -compiler         options are: intel [D], cray, gnu, pgi
    -help:	     show this help page
    -srcdir:	     the directory where the HDF5 source resides
    -build_autotools: build HDF5 compliant autotools. Useful if the
@@ -117,9 +117,17 @@ export CFLAGS="-fPIC"
 export FCFLAGS="-fPIC"
 export LDFLAGS="-dynamic"
 
+export RUNSERIAL="aprun -n 1"
+export RUNPARALLEL="aprun -n 6"
+
 if [[ ("$COMPILER_ID" == "intel") || ("$COMPILER_ID" == "")]]; then
   export CFLAGS="-Ofast"
   export FCFLAGS="-Ofast"
+else
+  if [[ ("$COMPILER_ID" == "gnu") ]]; then
+    export XTPE_LINK_TYPE=dynamic
+    export CRAY_CPU_TARGET="x86-64"
+  fi
 fi
 
 CONFIGURE="$CONFIGURE $CONFIG_OP"
