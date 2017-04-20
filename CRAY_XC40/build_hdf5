@@ -117,8 +117,6 @@ export CFLAGS="-fPIC"
 export FCFLAGS="-fPIC"
 export LDFLAGS="-dynamic"
 
-export RUNPARALLEL="aprun -n 6"
-
 if [[ ("$COMPILER_ID" == "intel") || ("$COMPILER_ID" == "")]]; then
   export CFLAGS="-Ofast"
   export FCFLAGS="-Ofast"
