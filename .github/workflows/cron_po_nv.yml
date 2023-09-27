@@ -12,11 +12,11 @@ jobs:
     - name: cURL request
       run: curl -s -o out.json 'https://my.cdash.org/api/v1/index.php?project=HDF5'
     - id: date
-      run: echo "##[set-output name=data;]$(python ./bin/cdash.py polaris hvhpc)"
+      run: echo "##[set-output name=data;]$(python ./bin/cdash.py polaris nvhpc)"
     - name: Time badge
       uses: RubbaBoy/BYOB@v1.3.0
       with:
-        NAME: polaris-nv
+        NAME: polaris_nv
         LABEL: 'Polaris Test Failures'
         STATUS: ${{ steps.date.outputs.data }}
         COLOR: 00EEFF
