@@ -1,0 +1,32 @@
+name: sunspot cron
+
+on:
+  schedule:
+    - cron: '25 5 * * *'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout hpc-h5
+      uses: actions/checkout@v4
+    - name: cURL request
+      run: curl -s -o out.json 'https://my.cdash.org/api/v1/index.php?project=HDF5'
+    - id: date
+      run: echo "##[set-output name=data;]$(python ./bin/cdash.py uan-0001 Linux-mpicc)"
+
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: out.json
+        path: ${{ runner.workspace }}/hpc-h5/out.json
+      
+    - name: Time badge
+      uses: RubbaBoy/BYOB@v1.3.0
+      with:
+        NAME: sunspot
+        LABEL: 'Sunspot Test Failures'
+        STATUS: ${{ steps.date.outputs.data }}
+        COLOR: 00EEFF
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        REPOSITORY: hyoklee/hpc-h5
+        ACTOR: hyoklee

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+#PBS -l select=1:system=polaris,place=scatter
+#PBS -A CSC250STDM10
+#PBS -l walltime=00:60:00
+#PBS -l filesystems=home
+#PBS -N HDF5
+#PBS -k doe
+#PBS -q debug
+
+module load nvhpc/23.3
+module load cmake
+
+cd /lus/grand/projects/CSC250STDM10/hyoklee/hdf5_nv/build
+/home/hyoklee/src/hpc-h5/bin/ctt
+
+
+

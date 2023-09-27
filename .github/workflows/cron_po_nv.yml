@@ -1,0 +1,30 @@
+name: polaris-nv cron
+
+on:
+  schedule:
+    - cron: '25 16 * * *'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout hpc-h5
+      uses: actions/checkout@v4    
+    - name: cURL request
+      run: curl -s -o out.json 'https://my.cdash.org/api/v1/index.php?project=HDF5'
+    - id: date
+      run: echo "##[set-output name=data;]$(python ./bin/cdash.py polaris hvhpc)"
+    - name: Time badge
+      uses: RubbaBoy/BYOB@v1.3.0
+      with:
+        NAME: polaris-nv
+        LABEL: 'Polaris Test Failures'
+        STATUS: ${{ steps.date.outputs.data }}
+        COLOR: 00EEFF
+        GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        REPOSITORY: hyoklee/hpc-h5
+        ACTOR: hyoklee
+    - name: Upload
+      uses: actions/upload-artifact@v2
+      with:
+        name: out.json
+        path: ${{ runner.workspace }}/hpc-h5/out.json
