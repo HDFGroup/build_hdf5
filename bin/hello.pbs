@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#PBS -l select=2:system=sunspot,place=scatter
+#PBS -A CSC250STDM12_CNDA 
+#PBS -l walltime=00:20:00
+#PBS -N 2NodeRunExample
+#PBS -k doe
+#PBS -q workq
+
+export FI_CXI_DEFAULT_CQ_SIZE=131072
+export FI_CXI_CQ_FILL_PERCENT=20
+export TZ='/usr/share/zoneinfo/US/Central'
+export OMP_PROC_BIND=spread
+export OMP_NUM_THREADS=8
+unset OMP_PLACES
+
+echo Jobid: $PBS_JOBID
+echo Running on host `hostname`
+echo Running on nodes `cat $PBS_NODEFILE`
+
+NNODES=`wc -l < $PBS_NODEFILE`
+NRANKS=2
+NDEPTH=2
+NTHREADS=$OMP_NUM_THREADS 
+NTOTRANKS=$(( NNODES * NRANKS ))
+
+echo "NUM_NODES=${NNODES}  TOTAL_RANKS=${NTOTRANKS}  RANKS_PER_NODE=${NRANKS}  THREADS_PER_RANK=${OMP_NUM_THREADS}"
+
+echo "OMP_PROC_BIND=$OMP_PROC_BIND OMP_PLACES=$OMP_PLACES"
+
+module load daos/base
+module load spack
+module load cmake
+
+cd /home/hyoklee/src
+mpirun -np 24 -ppn 24 ./a.out

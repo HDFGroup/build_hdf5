@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+ctest -T Build --output-on-error -j
+ctest -T Test --output-on-error -j
+ctest -T Submit
+

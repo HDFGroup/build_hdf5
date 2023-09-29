@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#PBS -l select=6:system=sunspot,place=scatter
+#PBS -A CSC250STDM12_CNDA 
+#PBS -l walltime=00:60:00
+#PBS -N HDF5
+#PBS -k doe
+#PBS -q workq
+
+export FI_CXI_DEFAULT_CQ_SIZE=131072
+export FI_CXI_CQ_FILL_PERCENT=20
+export TZ='/usr/share/zoneinfo/US/Central'
+export OMP_PROC_BIND=spread
+export OMP_NUM_THREADS=8
+unset OMP_PLACES
+
+cd /home/hyoklee
+echo Jobid: $PBS_JOBID
+echo Running on host `hostname`
+echo Running on nodes `cat $PBS_NODEFILE`
+
+NNODES=`wc -l < $PBS_NODEFILE`
+
+# Number of MPI ranks per node
+NRANKS=12
+# NRANKS=2
+
+
+# Number of hardware threads per rank, spacing between MPI ranks on a node
+NDEPTH=16
+# NDEPTH=2
+
+# Number of OMP threads per rank, given to OMP_NUM_THREADS
+NTHREADS=$OMP_NUM_THREADS 
+NTOTRANKS=$(( NNODES * NRANKS ))
+
+echo "NUM_NODES=${NNODES}  TOTAL_RANKS=${NTOTRANKS}  RANKS_PER_NODE=${NRANKS}  THREADS_PER_RANK=${OMP_NUM_THREADS}"
+
+echo "OMP_PROC_BIND=$OMP_PROC_BIND OMP_PLACES=$OMP_PLACES"
+module load daos/base
+module load spack
+module load cmake
+module load mpich/52.2
+
+cd /lus/gila/projects/CSC250STDM10_CNDA/hyoklee/hdf5/build
+/home/hyoklee/src/hpc-h5/bin/ctts
+

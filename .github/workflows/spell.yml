@@ -1,0 +1,11 @@
+name: check spelling
+on: [push, pull_request]
+jobs:
+  codespell:
+    name: Check spelling
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: codespell-project/actions-codespell@master
+        with:
+          ignore_words_list: hdf5
